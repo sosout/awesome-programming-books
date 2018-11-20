@@ -9,6 +9,186 @@ categories:
 
 ## JavaScript 面试题
 
+### prototype 对象
+
+1、`JavaScript` 继承机制的设计思想就是，原型对象的所有属性和方法，都能被实例对象共享。也就是说，如果属性和方法定义在原型上，那么所有实例对象就能共享，不仅节省了内存，还体现了实例对象之间的联系。
+
+2、`JavaScript` 规定，每个函数都有一个 `prototype` 属性，指向一个对象(就是 JavaScript 的原型对象（prototype）)。
+
+```js
+function f() {}
+typeof f.prototype // "object"
+```
+
+上面代码中，函数 `f` 默认具有 `prototype` 属性，指向一个对象。
+
+3、对于普通函数来说，`prototype` 属性基本无用。但是，对于构造函数来说，生成实例的时候，该属性会自动成为实例对象的原型。
+
+```js
+function Animal(name) {
+  this.name = name;
+}
+Animal.prototype.color = 'white';
+
+var cat1 = new Animal('大毛');
+var cat2 = new Animal('二毛');
+
+cat1.color // 'white'
+cat2.color // 'white'
+```
+
+上面代码中，构造函数 `Animal` 的 `prototype` 属性，就是实例对象 `cat1` 和 `cat2` 的原型对象。原型对象上添加一个color属性，结果，实例对象都共享了该属性。
+
+总结一下，原型对象的作用，就是定义所有实例对象共享的属性和方法。这也是它被称为原型对象的原因，而实例对象可以视作从原型对象衍生出来的子对象。
+
+#### 参考：
+1. [《JavaScript 标准参考教程（alpha）》，by 阮一峰 prototype 对象](http://javascript.ruanyifeng.com/oop/prototype.html#toc0)
+
+### 原型链
+
+`JavaScript` 规定，所有对象都有自己的原型对象（ `prototype` ）。一方面，任何一个对象，都可以充当其他对象的原型；另一方面，由于原型对象也是对象，所以它也有自己的原型。因此，就会形成一个“原型链”（ `prototype chain` ）：对象到原型，再到原型的原型……
+
+如果一层层地上溯，所有对象的原型最终都可以上溯到Object.prototype，即Object构造函数的prototype属性。也就是说，所有对象都继承了Object.prototype的属性。这就是所有对象都有valueOf和toString方法的原因，因为这是从Object.prototype继承的。
+
+那么，Object.prototype对象有没有它的原型呢？回答是Object.prototype的原型是null。null没有任何属性和方法，也没有自己的原型。因此，原型链的尽头就是null。
+
+#### 参考：
+1. [《JavaScript 标准参考教程（alpha）》，by 阮一峰 prototype 对象 - 原型链](http://javascript.ruanyifeng.com/oop/prototype.html#toc3)
+
+### js中__proto__和prototype的区别和关系？
+
+#### 问题描述：
+
+js中__proto__和prototype的区别和关系？
+
+#### 答案：
+
+![](/images/front-end-interview/prototype1.jpg)
+
+`__proto__` （隐式原型）与 `prototype` （显式原型）
+
+**1.是什么？**
+
+* 显式原型 explicit prototype property：
+
+每一个函数在创建之后都会拥有一个名为 `prototype` 的属性，这个属性指向函数的原型对象。
+
+Note：通过 `Function.prototype.bind` 方法构造出来的函数是个例外，它没有 `prototype` 属性。
+
+* 隐式原型 implicit prototype link：
+
+`JavaScript` 中任意对象都有一个内置属性[[ `prototype` ]]，在 `ES5` 之前没有标准的方法访问这个内置属性，但是大多数浏览器都支持通过 `__proto__` 来访问。`ES5` 中有了对于这个内置属性标准的 `Get` 方法 `Object.getPrototypeOf()`。
+
+Note:`Object.prototype` 这个对象是个例外，它的 `__proto__` 值为 `null`.
+
+* 二者的关系：
+
+隐式原型指向创建这个对象的函数( `constructor` )的 `prototype`.
+
+**2. 作用是什么**
+
+* 显式原型的作用：用来实现基于原型的继承与属性的共享。
+
+* 隐式原型的作用：构成原型链，同样用于实现基于原型的继承。举个例子，当我们访问 `obj` 这个对象中的 `x` 属性时，如果在 `obj` 中找不到，那么就会沿着 `__proto__` 依次查找。
+
+**3. __proto__的指向**
+
+`__proto__` 的指向到底如何判断呢？根据ECMA定义 `'to the value of its constructor’s "prototype" '` ----指向创建这个对象的函数的显式原型。所以关键的点在于找到创建这个对象的构造函数，接下来就来看一下JS中对象被创建的方式，一眼看过去似乎有三种方式：（1）`对象字面量的方式` （2）`new 的方式` （3）`ES5中的Object.create()`， 但是我认为本质上只有一种方式，也就是通过 `new` 来创建。为什么这么说呢，首先字面量的方式是一种为了开发人员更方便创建对象的一个语法糖，本质就是 `var o = new Object(); o.xx = xx;o.yy=yy;` 再来看看 `Object.create()`,这是 `ES5` 中新增的方法，在这之前这被称为原型式继承.
+
+::: warning
+道格拉斯在2006年写了一篇文章，题为 Prototypal Inheritance In JavaScript。在这篇文章中，他介绍了一种实现继承的方法，这种方法并没有使用严格意义上的构造函数。他的想法是借助原型可以基于已有的对象创建新对象，同时还不比因此创建自定义类型，为了达到这个目的，他给出了如下函数:
+:::
+
+```js
+function object(o){
+  function F(){}
+  F.prototype = o;
+  return new F()
+}
+```
+
+所以从实现代码 `return new F()` 中我们可以看到，这依然是通过 `new` 来创建的。不同之处在于由 ` Object.create()` 创建出来的对象没有构造函数，看到这里你是不是要问，没有构造函数我怎么知道它的 `__proto__` 指向哪里呢，其实这里说它没有构造函数是指在 `Object.create()` 函数外部我们不能访问到它的构造函数，然而在函数内部实现中是有的，它短暂地存在了那么一会儿。假设我们现在就在函数内部，可以看到对象的构造函数是 `F`, 现在
+
+```js
+//以下是用于验证的伪代码
+var f = new F(); 
+//于是有
+f.__proto__ === F.prototype //true
+//又因为
+F.prototype === o;//true
+//所以
+f.__proto__ === o;
+```
+
+因此由 `Object.create(o)` 创建出来的对象它的隐式原型指向 `o`。好了，对象的创建方式分析完了，现在你应该能够判断一个对象的 `__proto__` 指向谁了。
+
+好吧，还是举一些一眼看过去比较疑惑的例子来巩固一下。
+
+* 构造函数的显示原型的隐式原型：
+
+内建对象(built-in object)：比如 `Array()`，`Array.prototype.__proto__` 指向什么？ `Array.prototype` 也是一个对象，对象就是由 `Object()` 这个构造函数创建的，因此 `Array.prototype.__proto__ === Object.prototype //true`，或者也可以这么理解，所有的内建对象都是由 `Object()` 创建而来。
+
+* 自定义对象:
+
+1. 默认情况下：
+
+```js
+function Foo(){}
+var foo = new Foo()
+Foo.prototype.__proto__ === Object.prototype //true 理由同上
+```
+
+2. 其他情况： 
+
+(1)、Foo继承Bar
+```js
+function Bar(){}
+//这时我们想让Foo继承Bar
+Foo.prototype = new Bar()
+Foo.prototype.__proto__ === Bar.prototype //true
+```
+
+(2)、Foo不继承
+```js
+//我们不想让Foo继承谁，但是我们要自己重新定义Foo.prototype
+Foo.prototype = {
+  a:10,
+  b:-10
+}
+//这种方式就是用了对象字面量的方式来创建一个对象，根据前文所述 
+Foo.prototype.__proto__ === Object.prototype
+```
+
+注： 以上两种情况都等于完全重写了 `Foo.prototype`，所以 `Foo.prototype.constructor` 也跟着改变了，于是乎 `constructor` 这个属性和原来的构造函数 `Foo（）` 也就切断了联系。
+
+* 构造函数的隐式原型
+
+既然是构造函数那么它就是 `Function（）` 的实例，因此也就指向 `Function.prototype`,比如 `Object.__proto__ === Function.prototype`
+
+**4. instanceof**
+
+`instanceof` 操作符的内部实现机制和隐式原型、显式原型有直接的关系。`instanceof` 的左值一般是一个对象，右值一般是一个构造函数，用来判断左值是否是右值的实例。它的内部实现原理是这样的： 
+
+```js
+//设 L instanceof R 
+//通过判断
+ L.__proto__.__proto__ ..... === R.prototype ？
+//最终返回true or false
+```
+
+也就是沿着 `L` 的 `__proto__` 一直寻找到原型链末端，直到等于 `R.prototype` 为止。知道了这个也就知道为什么以下这些奇怪的表达式为什么会得到相应的值了.
+
+```js
+Function instanceof Object // true 
+Object instanceof Function // true 
+Function instanceof Function //true
+Object instanceof Object // true
+Number instanceof Number //false
+```
+
+#### 参考：
+1. [js中__proto__和prototype的区别和关系？](https://www.zhihu.com/question/34183746/answer/59043879)
+
 ### JavaScript 如何工作：对引擎、运行时、调用堆栈的概述
 
 #### JavaScript 引擎
