@@ -9,6 +9,130 @@ categories:
 
 ## JavaScript 面试题
 
+### promise
+#### 题目：红灯三秒亮一次，绿灯一秒亮一次，黄灯2秒亮一次；如何让三个灯不断交替重复亮灯？（用Promse实现）
+思路：先用promise控制三种灯的执行顺序，然后用递归实现循环亮灯
+``` js
+function red() {
+  console.log('red');
+}
+
+function green() {
+  console.log('green');
+}
+
+function yellow() {
+  console.log('yellow');
+}
+
+let light = (fn, timer) => new Promise(resolve => {
+  setTimeout(function() {
+    fn()
+    resolve()
+  }, timer)
+})
+
+// times为交替次数
+function start(times) {
+  if (!times) {
+    return
+  }
+
+  times--
+  Promise.resolve()
+    .then(() => light(red, 3000))
+    .then(() => light(green, 1000))
+    .then(() => light(yellow, 2000))
+    .then(() => start(times))
+
+}
+start(3)
+```
+#### Promise 执行顺序
+``` js
+new Promise(resolve => {
+  console.log(1);
+  resolve(3);
+}).then(num => {
+  console.log(num)
+});
+console.log(2)
+```
+这道题的输出是123。
+``` js
+new Promise(resolve => {
+  console.log(1);
+  resolve(3);
+  Promise.resolve().then(()=> console.log(4))
+}).then(num => {
+  console.log(num)
+});
+console.log(2)
+```
+这道题的输出是1243。
+
+#### Promise的队列与setTimeout的队列
+```js
+setTimeout(function() {
+	console.log(4)
+},0); 
+new Promise(function(resolve){ 
+	console.log(1) 
+	for( var i=0 ; i<10000 ; i++ ){ 
+		i==9999 && resolve() 
+	} console.log(2) 
+}).then(function(){ 
+	console.log(5) 
+}); 
+console.log(3);
+```
+这道题的输出是1,2,3,5,4。
+**解析：**
+整个script代码，放在了macrotask queue中，setTimeout也放入macrotask queue。但是，promise.then放到了另一个任务队列microtask queue中。
+这两个任务队列执行顺序如下，取1个macrotask queue中的task，执行之。然后把所有microtask queue顺序执行完，再取macrotask queue中的下一个任务。
+代码开始执行时，所有这些代码在macrotaskqueue中，取出来执行之。后面遇到了setTimeout，又加入到macrotask queue中，然后，遇到了promise.then，放入到了另一个队列microtask queue。等整个execution context stack（执行上下文栈）执行完后，下一步该取的是microtask queue中的任务了。因此promise.then的回调比setTimeout先执行。
+
+一个浏览器环境（unit of related similar-origin browsing contexts.）只能有一个事件循环（Event loop），而一个事件循环可以多个任务队列（Task queue）（目的想必是方便调整优先级），每个任务都有一个任务源（Task source）。
+相同任务源的任务，只能放到一个任务队列中。
+不同任务源的任务，可以放到不同任务队列中。
+
+它指出，单独的任务队列（Job queue）中的任务总是按先进先出的顺序执行，但是不保证多个任务队列中的任务优先级，具体实现可能会交叉执行。每一个任务队列是有名字的，至于有多少个任务队列，取决于实现。每一个实现至少应该包含以上两个任务队列。
+
+#### setImmediate 和 process.nextTick
+```js
+setImmediate(function(){ 
+	console.log(1); 
+},0); 
+setTimeout(function(){ 
+	console.log(2); 
+},0); 
+new Promise(function(resolve){ 
+	console.log(3); 
+	resolve(); 
+	console.log(4); 
+}).then(function(){ 
+	console.log(5); 
+}); 
+console.log(6); 
+process.nextTick(function(){ console.log(7); }); 
+console.log(8);
+```
+这道题的输出是：3 4 6 8 7 5 2 1
+
+事件的注册顺序如下：
+setImmediate - setTimeout - promise.then - process.nextTick
+
+因此，我们得到了优先级关系如下：
+process.nextTick > promise.then > setTimeout > setImmediate
+
+#### process.nextTick也会放入microtask quque，为什么优先级比promise.then高呢？
+“process.nextTick 永远大于 promise.then，原因其实很简单。。。在Node中，_tickCallback在每一次执行完TaskQueue中的一个任务后被调用，而这个_tickCallback中实质上干了两件事：
+* nextTickQueue中所有任务执行掉(长度最大1e4，Node版本v6.9.1)
+* 第一步执行完后执行_runMicrotasks函数，执行microtask中的部分(promise.then注册的回调)，所以很明显process.nextTick > promise.then”
+
+#### 到底setTimeout有没有一个依赖实现的最小延迟？4ms？
+4ms已经标准化了。
+
 ### JavaScript 事件委托详解
 #### 基本概念
 事件委托，通俗地来讲，就是把一个元素响应事件（click、keydown......）的函数委托到另一个元素；
@@ -500,3 +624,6 @@ node_modules
 这一步将会更新工程中的 node_modules，并执行模块中的生命周期函数（按照 preinstall、install、postinstall 的顺序）。
 #### 执行工程自身生命周期
 当前 npm 工程如果定义了钩子此时会被执行（按照 install、postinstall、prepublish、prepare 的顺序）。最后一步是生成或更新版本描述文件，npm install 过程完成。
+
+### node 定时器
+[Node 定时器详解](http://www.ruanyifeng.com/blog/2018/02/node-event-loop.html)
