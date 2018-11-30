@@ -755,7 +755,75 @@ React.createElement(
 在组件需要包含内部状态或者使用到生命周期函数的时候使用 Class Component ，否则使用函数式组件。
 
 ### React 中 refs 的作用是什么？
-Refs 是 React 提供给我们的安全访问 DOM 元素或者某个组件实例的句柄。我们可以为元素添加ref属性然后在回调函数中接受该元素在 DOM 树中的句柄
+Refs 是 React 提供给我们的安全访问 DOM 元素或者某个组件实例的句柄。
+
+具体参考：[React ref 的前世今生](https://zhuanlan.zhihu.com/p/40462264)
+
+### React 中 keys 的作用是什么？
+Keys 是 React 用于追踪哪些列表中元素被修改、被添加或者被移除的辅助标识
+```js
+render () {
+  return (
+    <ul>
+      {this.state.todoItems.map(({task, uid}) => {
+        return <li key={uid}>{task}</li>
+      })}
+    </ul>
+  )
+}
+```
+在开发过程中，我们需要保证某个元素的 key 在其同级元素中具有唯一性。在 React Diff 算法中 React 会借助元素的 Key 值来判断该元素是新近创建的还是被移动而来的元素，从而减少不必要的元素重渲染。此外，React 还需要借助 Key 值来判断元素与本地状态的关联关系，因此我们绝不可忽视转换函数中 Key 的重要性。
+
+具体参考：[谈谈 react 中的 key](https://juejin.im/post/5a7c04746fb9a063461fe700)
+
+### 如果你创建了类似于下面的Twitter元素，那么它相关的类定义是啥样子的？
+```js
+<Twitter username='tylermcginnis33'>
+  {(user) => user === null
+    ? <Loading />
+    : <Badge info={user} />}
+</Twitter>
+```
+``` js
+import React, { Component, PropTypes } from 'react'
+import fetchUser from 'twitter'
+// fetchUser take in a username returns a promise
+// which will resolve with that username's data.
+class Twitter extends Component {
+  // finish this
+}
+```
+如果你还不熟悉回调渲染模式（Render Callback Pattern），这个代码可能看起来有点怪。这种模式中，组件会接收某个函数作为其子组件，然后在渲染函数中以props.children进行调用：
+``` js
+import React, { Component, PropTypes } from 'react'
+import fetchUser from 'twitter'
+class Twitter extends Component {
+  state = {
+    user: null,
+  }
+  static propTypes = {
+    username: PropTypes.string.isRequired,
+  }
+  componentDidMount () {
+    fetchUser(this.props.username)
+      .then((user) => this.setState({user}))
+  }
+  render () {
+    return this.props.children(this.state.user)
+  }
+}
+```
+这种模式的优势在于将父组件与子组件解耦和，父组件可以直接访问子组件的内部状态而不需要再通过Props传递，这样父组件能够更为方便地控制子组件展示的UI界面。譬如产品经理让我们将原本展示的Badge替换为Profile，我们可以轻易地修改下回调函数即可：
+``` js
+<Twitter username='tylermcginnis33'>
+  {(user) => user === null
+    ? <Loading />
+    : <Profile info={user} />}
+</Twitter>
+```
+更多可参考：[React 中的 Render Props](https://zhuanlan.zhihu.com/p/31267131)
+
+### 受控组件 与 非受控组件
 
 ## vue 面试题
 ### vue 3.0 变化
