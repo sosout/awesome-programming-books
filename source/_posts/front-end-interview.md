@@ -1567,6 +1567,124 @@ BFC(block formatting context)翻译为“块级格式化上下文”，它会生
 
 </html>
 ```
+### 三列布局
+#### flex
+优点：方便 
+缺点：还是flex兼容性
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>未知宽高元素水平垂直居中</title>
+</head>
+<style>
+    .father {
+        display: flex;
+        height: 100%;
+    }
+
+    .left,
+    .right {
+        flex: 0 1 100px;
+        background-color: red;
+    }
+
+    .middle {
+        flex: 1;
+        height: 100%;
+        background-color: green;
+    }
+</style>
+<body>
+    <div class="father">
+        <div class='left'>left</div>
+        <div class='middle'>middle</div>
+        <div class='right'>center</div>
+    </div>
+</body>
+</html>
+```
+#### 负margin布局(双飞翼)
+优点：市面上使用最多的一个
+缺点：麻烦，这是多年前淘宝的老技术了
+``` html
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>圣杯布局/双飞翼布局</title>
+    <style>
+        .mainWrap {
+            width: 100%;
+            float: left;
+        }
+
+        .main {
+            margin: 0 120px;
+        }
+
+        .left,
+        .right {
+            float: left;
+            width: 100px;
+        }
+
+        .left {
+            margin-left: -100%;
+        }
+
+        .right {
+            margin-left: -100px;
+        }
+    </style>
+</head>
+
+<div class="parent" id="parent" style="background-color: lightgrey;">
+    <div class="mainWrap">
+        <div class="main" style="background-color: lightcoral;">
+            main
+        </div>
+    </div>
+    <div class="left" style="background-color: orange;">
+        left
+    </div>
+    <div class="right" style="background-color: lightsalmon;">
+        right
+    </div>
+</div>
+
+</html>
+```
+### 列举HTML5新特性
+* 语意化标签(nav、aside、dialog、header、footer等)
+* canvas
+* 拖放相关api
+* Audio、Video
+* 获取地理位置
+* 更好的input校验
+* web存储(localStorage、sessionStorage)
+* webWorkers(类似于多线程并发)
+* webSocket
+
+### 列举Css3新特性
+* 选择器
+* 边框(border-image、border-radius、box-shadow)
+* 背景(background-clip、background-origin、background-size)
+* 渐变(linear-gradients、radial-gradents)
+* 字体(@font-face)
+* 转换、形变(transform)
+* 过度(transition)
+* 动画(animation)
+* 弹性盒模型(flex-box)
+* 媒体查询(@media)
+
+### transition和animation的区别是什么？
+过渡属性transition可以在一定的事件内实现元素的状态过渡为最终状态，用于模拟一种过渡动画效果，但是功能有限，只能用于制作简单的动画效果；
+
+动画属性animation可以制作类似Flash动画，通过关键帧控制动画的每一步，控制更为精确，从而可以制作更为复杂的动画。
 
 ## Node 面试题
 ### npm install的实现原理
