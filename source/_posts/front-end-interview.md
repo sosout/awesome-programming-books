@@ -10,6 +10,7 @@ categories:
 ## JavaScript 面试题
 
 ### promise
+更多参考：[async/await 在chrome 环境和 node 环境的 执行结果不一致，求解？](https://www.zhihu.com/question/268007969)
 #### 题目：红灯三秒亮一次，绿灯一秒亮一次，黄灯2秒亮一次；如何让三个灯不断交替重复亮灯？（用Promse实现）
 思路：先用promise控制三种灯的执行顺序，然后用递归实现循环亮灯
 ``` js
@@ -824,7 +825,102 @@ class Twitter extends Component {
 更多可参考：[React 中的 Render Props](https://zhuanlan.zhihu.com/p/31267131)
 
 ### 受控组件 与 非受控组件
+React 的核心组成之一就是能够维持内部状态的自治组件，不过当我们引入原生的HTML表单元素时（input,select,textarea 等），我们是否应该将所有的数据托管到 React 组件中还是将其仍然保留在 DOM 元素中呢？这个问题的答案就是受控组件与非受控组件的定义分割。受控组件（Controlled Component）代指那些交由 React 控制并且所有的表单数据统一存放的组件。譬如下面这段代码中username变量值并没有存放到DOM元素中，而是存放在组件状态数据中。任何时候我们需要改变username变量值时，我们应当调用setState函数进行修改。
+``` js
+class ControlledForm extends Component {
+  state = {
+    username: ''
+  }
+  updateUsername = (e) => {
+    this.setState({
+      username: e.target.value,
+    })
+  }
+  handleSubmit = () => {}
+  render () {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <input
+          type='text'
+          value={this.state.username}
+          onChange={this.updateUsername} />
+        <button type='submit'>Submit</button>
+      </form>
+    )
+  }
+}
+```
+而非受控组件（Uncontrolled Component）则是由DOM存放表单数据，并非存放在 React 组件中。我们可以使用 refs 来操控DOM元素：
+``` js
+class UnControlledForm extends Component {
+  handleSubmit = () => {
+    console.log("Input Value: ", this.input.value)
+  }
+  render () {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <input
+          type='text'
+          ref={(input) => this.input = input} />
+        <button type='submit'>Submit</button>
+      </form>
+    )
+  }
+}
+```
+竟然非受控组件看上去更好实现，我们可以直接从 DOM 中抓取数据，而不需要添加额外的代码。不过实际开发中我们并不提倡使用非受控组件，因为实际情况下我们需要更多的考虑表单验证、选择性的开启或者关闭按钮点击、强制输入格式等功能支持，而此时我们将数据托管到 React 中有助于我们更好地以声明式的方式完成这些功能。引入 React 或者其他 MVVM 框架最初的原因就是为了将我们从繁重的直接操作 DOM 中解放出来。
 
+### 在生命周期中的哪一步你应该发起 AJAX 请求？
+我们应当将AJAX 请求放到 componentDidMount 函数中执行，主要原因有下：
+* React 下一代调和算法 Fiber 会通过开始或停止渲染的方式优化应用性能，其会影响到 componentWillMount 的触发次数。对于 componentWillMount 这个生命周期函数的调用次数会变得不确定，React 可能会多次频繁调用 componentWillMount。如果我们将 AJAX 请求放到 componentWillMount 函数中，那么显而易见其会被触发多次，自然也就不是好的选择。
+
+* 如果我们将 AJAX 请求放置在生命周期的其他函数中，我们并不能保证请求仅在组件挂载完毕后才会要求响应。如果我们的数据请求在组件挂载之前就完成，并且调用了setState函数将数据添加到组件状态中，对于未挂载的组件则会报错。而在 componentDidMount 函数中进行 AJAX 请求则能有效避免这个问题。
+
+### shouldComponentUpdate 的作用是啥以及为何它这么重要？
+shouldComponentUpdate 允许我们手动地判断是否要进行组件更新，根据组件的应用场景设置函数的合理返回值能够帮我们避免不必要的更新。
+
+### 如何告诉 React 它应该编译生产环境版本？
+通常情况下我们会使用 Webpack 的 DefinePlugin 方法来将 NODE_ENV 变量值设置为 production。编译版本中 React 会忽略 propType 验证以及其他的告警信息，同时还会降低代码库的大小，React 使用了 Uglify 插件来移除生产环境下不必要的注释等信息。
+
+### 为什么我们需要使用 React 提供的 Children API 而不是 JavaScript 的 map？
+props.children并不一定是数组类型，譬如下面这个元素：
+``` js
+<Parent>
+  <h1>Welcome.</h1>
+</Parent>
+```
+如果我们使用props.children.map函数来遍历时会受到异常提示，因为在这种情况下props.children是对象（object）而不是数组（array）。React 当且仅当超过一个子元素的情况下会将props.children设置为数组，就像下面这个代码片：
+```js
+<Parent>
+  <h1>Welcome.</h1>
+  <h2>props.children will now be an array</h2>
+</Parent>
+```
+这也就是我们优先选择使用React.Children.map函数的原因，其已经将props.children不同类型的情况考虑在内了。
+
+### 概述下 React 中的事件处理逻辑
+为了解决跨浏览器兼容性问题，React 会将浏览器原生事件（Browser Native Event）封装为合成事件（SyntheticEvent）传入设置的事件处理器中。这里的合成事件提供了与原生事件相同的接口，不过它们屏蔽了底层浏览器的细节差异，保证了行为的一致性。另外有意思的是，React 并没有直接将事件附着到子元素上，而是以单一事件监听器的方式将所有的事件发送到顶层进行处理。这样 React 在更新 DOM 的时候就不需要考虑如何去处理附着在 DOM 上的事件监听器，最终达到优化性能的目的。
+
+### createElement 与 cloneElement 的区别是什么？
+createElement 函数是 JSX 编译之后使用的创建 React Element 的函数，而 cloneElement 则是用于复制某个元素并传入新的 Props。
+
+### 传入 setState 函数的第二个参数的作用是什么？
+该函数会在setState函数调用完成并且组件开始重渲染的时候被调用，我们可以用该函数来监听渲染是否完成：
+```js
+this.setState(
+  { username: 'tylermcginnis33' },
+  () => console.log('setState has finished and the component has re-rendered.')
+)
+```
+下述代码有错吗？
+``` js
+this.setState((prevState, props) => {
+  return {
+    streak: prevState.streak + props.count
+  }
+})
+```
+这段代码没啥问题，不过只是不太常用罢了。
 ## vue 面试题
 ### vue 3.0 变化
 **vue3.0的改进思路**
