@@ -1700,6 +1700,71 @@ CSS introduces the concepts of pseudo-elements and pseudo-classes to permit form
 #### 伪类与伪元素的区别
 伪类与伪元素的区别在于：有没有创建一个文档树之外的元素。
 
+### css加载会造成阻塞吗？
+具体参考：[css加载会造成阻塞吗？](https://zhuanlan.zhihu.com/p/43282197)
+
+### css 回流与重绘
+具体参考：[重构与回流](https://www.cnblogs.com/jiayuexuan/p/7490140.html)
+
+### css 盒子模型
+具体参考：[从CSS盒子模型说起](https://zhuanlan.zhihu.com/p/27839418)
+
+标准盒子模型：宽度=内容的宽度（content）+ border + padding + margin
+
+低版本IE盒子模型：宽度=内容宽度（content+border+padding）+ margin
+
+### Flex
+具体参考：
+* [Flex 布局教程：语法篇](http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html?utm_source=tuicool))
+* [Flex 布局教程：实例篇](http://www.ruanyifeng.com/blog/2015/07/flex-examples.html)
+
+### box-sizing属性
+用来控制元素的盒子模型的解析模式，默认为content-box
+
+context-box：W3C的标准盒子模型，设置元素的 height/width 属性指的是content部分的高/宽
+
+border-box：IE传统盒子模型。设置元素的height/width属性指的是border + padding + content部分的高/宽
+
+### CSS选择器有哪些？哪些属性可以继承？
+具体参考：[css选择器](http://www.sosout.com/2018/08/01/css-selector.html)
+
+可继承的属性：font-size, font-family, color
+
+不可继承的样式：border, padding, margin, width, height
+
+### display有哪些值？说明他们的作用?
+inline（默认）--内联
+
+none--隐藏
+
+block--块显示
+
+table--表格显示
+
+list-item--项目列表
+
+inline-block
+
+### position的值
+具体参考：
+* [position的四个属性值： relative ，absolute ，fixed，static](http://www.cnblogs.com/chinafine/articles/1765967.html)
+static（默认）：按照正常文档流进行排列；
+
+relative（相对定位）：不脱离文档流，参考自身静态位置通过 top, bottom, left, right 定位；
+
+absolute(绝对定位)：参考距其最近一个不为static的父级元素通过top, bottom, left, right 定位；
+
+fixed(固定定位)：所固定的参照对像是可视窗口。
+
+### 如何解决使用inline-block引起的空白间隙的问题
+具体参考：
+* [前端面试题（一）：如何解决使用inline-block引起的空白间隙的问题](https://blog.csdn.net/lizhengxv/article/details/80385623)
+* [有哪些好方法能处理 display: inline-block 元素之间出现的空格？](https://www.zhihu.com/question/21468450/answer/18342657)
+
+### 在 CSS 中，用 float 和 position 的区别是什么？
+具体参考：
+* [在 CSS 中，用 float 和 position 的区别是什么？](https://www.zhihu.com/question/19588854/answer/12309368)
+
 ## Node 面试题
 ### npm install的实现原理
 输入 npm install 命令并敲下回车后，会经历如下几个阶段（以 npm 5.5.1 为例）：
