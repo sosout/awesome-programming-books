@@ -9,6 +9,58 @@ categories:
 
 ## JavaScript 面试题
 
+### 简述ajax执行流程
+``` js
+var xhr =null;//创建对象 
+if(window.XMLHttpRequest){
+  xhr = new XMLHttpRequest();
+}else{
+  xhr = new ActiveXObject("Microsoft.XMLHTTP");
+}
+xhr.open(method,url,asyn);//初始化请求 
+xhr.setRequestHeader(“”,””);//设置http头信息 
+xhr.onreadystatechange =function(){
+  if (xhr.readyState == 4) {
+    var head = xhr.getAllResponseHeaders();
+    var response = xhr.responseText;
+    // 将服务器返回的数据，转换成json
+    response = JSON.parse(response);
+    if (xhr.status == 200) { // 请求成功
+      var Authorization = xhr.getResponseHeader("Authorization");
+    }
+  }
+}//指定回调函数 
+xhr.send();//发送请求 
+```
+执行流程：
+1. 创建XMLHttpRequest对象,也就是创建一个异步调用对象
+2. 创建一个新的HTTP请求,并指定该HTTP请求的方法、URL及验证信息
+3. 设置响应HTTP请求状态变化的函数
+4. 发送HTTP请求
+5. 获取异步调用返回的数据
+6. 使用JavaScript和DOM实现局部刷新
+
+status是XMLHttpRequest对象的一个属性，表示响应的HTTP状态码。
+readyState是XMLHttpRequest对象的一个属性，用来标识当前XMLHttpRequest对象处于什么状态。
+
+readystate 0~4：
+0：未初始化状态：此时，已经创建了一个XMLHttpRequest对象
+1：准备发送状态：此时，已经调用了XMLHttpRequest对象的open方法，并且XMLHttpRequest对象已经准备好将一个请求发送到服务器端
+2：已经发送状态：此时，已经通过send方法把一个请求发送到服务器端，但是还没有收到一个响应
+3：正在接收状态：此时，已经接收到HTTP响应头部信息，但是消息体部分还没有完全接收到
+4：完成响应状态：此时，已经完成了HTTP响应的接收
+
+### 平时工作中怎么样进行数据交互?如果后台没有提供数据怎么样进行开发?mock数据与后台返回的格式不同意怎么办?
+由后台编写接口文档、提供数据接口实、前台通过ajax访问实现数据交互；
+在没有数据的情况下寻找后台提供静态数据或者自己定义mock数据；
+返回数据不统一时编写映射文件 对数据进行映射。
+
+### ajax 和 jsonp ？
+ajax和jsonp的区别：
+相同点：都是请求一个url
+不同点：ajax的核心是通过xmlHttpRequest获取内容
+jsonp的核心则是动态添加`<script>`标签来调用服务器 提供的js脚本。
+
 ### JavaScript 数组打乱顺序
 参考：
 * [如何将一个 JavaScript 数组打乱顺序？](https://www.zhihu.com/question/68330851/answer/266506621)
