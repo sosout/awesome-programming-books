@@ -9,6 +9,41 @@ categories:
 
 ## JavaScript 面试题
 
+### JavaScript 数组打乱顺序
+参考：
+* [如何将一个 JavaScript 数组打乱顺序？](https://www.zhihu.com/question/68330851/answer/266506621)
+``` js
+// sort 算法
+let arr = [0, 1, 2, 3, 4];
+arr.sort(() => Math.random() > .5);
+
+// 最佳的打乱算法是Fisher-Yates算法
+const arr = [0, 1, 2, 3, 4];
+for (let i = 1; i < arr.length; i++) {
+  const random = Math.floor(Math.random() * (i + 1));
+  [arr[i], arr[random]] = [arr[random], arr[i]];
+}
+```
+
+### 如果我们使用JavaScript的"关联数组"，我们怎么计算"关联数组"的长度？
+```js
+var counterArray = {
+  A : 3,
+  B : 4
+};
+counterArray["C"] = 1;
+```
+其实答案很简单，直接计算key的数量就可以了。
+``` js
+Object.keys(counterArray).length // Output 3
+```
+
+### 记忆化斐波那契函数（Memoization）
+题目：斐波那契数列指的是类似于以下的数列：
+``` js
+1, 1, 2, 3, 5, 8, 13, ....
+```
+
 ### promise
 更多参考：[async/await 在chrome 环境和 node 环境的 执行结果不一致，求解？](https://www.zhihu.com/question/268007969)
 #### 题目：红灯三秒亮一次，绿灯一秒亮一次，黄灯2秒亮一次；如何让三个灯不断交替重复亮灯？（用Promse实现）
@@ -1002,7 +1037,7 @@ slot 实际上是一个抽象元素，有点类似template，设计思想有点�
 * 如果一个为正数一个为负数，那么取它们的代数和 。
 * 如果两个都为负数，那么取它们其中绝对值大的数。
 
- #### 如何解决外边距折叠
+#### 如何解决外边距折叠
 
 **一、浮动元素、inline-block 元素、绝对定位元素的 margin 不会和垂直方向上其他元素的 margin 折叠（注意这里指的是上下相邻的元素）** 
 
@@ -1670,16 +1705,19 @@ BFC(block formatting context)翻译为“块级格式化上下文”，它会生
 * webSocket
 
 ### 列举Css3新特性
-* 选择器
-* 边框(border-image、border-radius、box-shadow)
-* 背景(background-clip、background-origin、background-size)
-* 渐变(linear-gradients、radial-gradents)
-* 字体(@font-face)
-* 转换、形变(transform)
-* 过度(transition)
-* 动画(animation)
-* 弹性盒模型(flex-box)
-* 媒体查询(@media)
+1、颜色：新增RGBA、HSLA模式
+2、文字阴影(text-shadow)
+3、边框：圆角（border-radius）边框阴影：box-shadow
+4、盒子模型：box-sizing
+5、背景：background-size设置背景图片的尺寸，background-origin设置背景图片的原点，background-clip设置背景图片的裁剪区域，以“，”分隔可以设置多背景，用于自适应布局
+6、渐变：linear-gradient、radial-gradient
+7、过渡：transition可实现动画
+8、自定义动画
+9、在CSS3中唯一引入的伪元素是::selection
+10、多媒体查询、多栏布局
+11、border-image
+12、2D转换：transform:translate(x,y)rotate(x,y)skew(x,y)scale(x,y)
+13、3D转换
 
 ### transition和animation的区别是什么？
 过渡属性transition可以在一定的事件内实现元素的状态过渡为最终状态，用于模拟一种过渡动画效果，但是功能有限，只能用于制作简单的动画效果；
@@ -1728,26 +1766,71 @@ border-box：IE传统盒子模型。设置元素的height/width属性指的是bo
 ### CSS选择器有哪些？哪些属性可以继承？
 具体参考：[css选择器](http://www.sosout.com/2018/08/01/css-selector.html)
 
-可继承的属性：font-size, font-family, color
+#### 哪些属性可以自动继承呢
+1、字体系列属性
+font：组合字体
+font-family：规定元素的字体系列
+font-weight：设置字体的粗细
+font-size：设置字体的尺寸
+font-style：定义字体的风格
+font-variant：设置小型大写字母的字体显示文本，这意味着所有的小写字母
+均会被转换为大写，但是所有使用小型大写字体的字母与其余文本
+相比，其字体尺寸更小。
+font-stretch：允许你使文字变宽或变窄。所有主流浏览器都不支持。
+font-size-adjust：为某个元素规定一个 aspect 值，字体的小写字母 "x"
+的高度与"font-size" 高度之间的比率被称为一个字体的 aspect 值。
+这样就可以保持首选字体的 x-height
 
-不可继承的样式：border, padding, margin, width, height
+2、文本系列属性
+text-indent：文本缩进
+text-align：文本水平对齐
+text-shadow：设置文本阴影
+line-height：行高
+word-spacing：增加或减少单词间的空白（即字间隔）
+letter-spacing：增加或减少字符间的空白（字符间距）
+text-transform：控制文本大小写
+direction：规定文本的书写方向
+color：文本颜色
+3、元素可见性：visibility
+4、表格布局属性：caption-side
+border-collapse
+empty-cells
+5、列表属性：list-style-type
+list-style-image
+list-stye-position、list-style
+6、设置嵌套引用的引号类型：quotes
+7、光标属性：cursor
+
+#### 不可继承的属性
+1、display
+2、文本属性：vertical-align
+text-decoration
+3、盒子模型的属性:宽度、高度、内外边距、边框等
+4、背景属性：背景图片、颜色、位置等
+5、定位属性：浮动、清除浮动、定位position等
+6、生成内容属性:content、counter-reset、counter-increment
+7、轮廓样式属性:outline-style、outline-width、outline-color、outline
+8、页面样式属性:size、page-break-before、page-break-after
+
+**注意**
+继承中比较特殊的几点
+* a 标签的字体颜色不能被继承
+* `<h1>-<h6>`标签字体的大下也是不能被继承的
+因为它们都有一个默认值
 
 ### display有哪些值？说明他们的作用?
-inline（默认）--内联
-
-none--隐藏
-
-block--块显示
-
-table--表格显示
-
-list-item--项目列表
-
-inline-block
+block 块类型。默认宽度为父元素宽度，可设置宽高，换行显示。
+none 缺省值。像行内元素类型一样显示。
+inline 行内元素类型。默认宽度为内容宽度，不可设置宽高，同行显示。
+inline-block 默认宽度为内容宽度，可以设置宽高，同行显示。
+list-item 像块类型元素一样显示，并添加样式列表标记。
+table 此元素会作为块级表格来显示。
+inherit 规定应该从父元素继承display属性的值。
 
 ### position的值
 具体参考：
 * [position的四个属性值： relative ，absolute ，fixed，static](http://www.cnblogs.com/chinafine/articles/1765967.html)
+
 static（默认）：按照正常文档流进行排列；
 
 relative（相对定位）：不脱离文档流，参考自身静态位置通过 top, bottom, left, right 定位；
@@ -1760,10 +1843,471 @@ fixed(固定定位)：所固定的参照对像是可视窗口。
 具体参考：
 * [前端面试题（一）：如何解决使用inline-block引起的空白间隙的问题](https://blog.csdn.net/lizhengxv/article/details/80385623)
 * [有哪些好方法能处理 display: inline-block 元素之间出现的空格？](https://www.zhihu.com/question/21468450/answer/18342657)
+相邻的 inline-block 元素之间有换行或空格分隔的情况下会产生间距
+非 inline-block 水平元素设置为 inline-block 也会有水平间距
+可以借助 vertical-align:top; 消除垂直间隙
+可以在父级加 font-size：0; 在子元素里设置需要的字体大小，消除垂直间隙
+把 li 标签写到同一行可以消除垂直间隙，但代码可读性差
+
+### font-style 属性 oblique 是什么意思？
+ont-style: oblique; 使没有 italic 属性的文字实现倾斜
+
+### line-height 三种赋值方式有何区别？（带单位、纯数字、百分比）
+带单位：px 是固定值，而 em 会参考父元素 font-size 值计算自身的行高
+纯数字：会把比例传递给后代。例如，父级行高为 1.5，子元素字体为 18px，则子元素行高为 1.5 * 18 = 27px
+百分比：将计算后的值传递给后代
 
 ### 在 CSS 中，用 float 和 position 的区别是什么？
 具体参考：
 * [在 CSS 中，用 float 和 position 的区别是什么？](https://www.zhihu.com/question/19588854/answer/12309368)
+
+### 如何在页面引用 CSS
+* 外部引用@import引用样式；
+* 外部样式表。引入一个外部CSS文件；
+* 内部样式表。将CSS代码放在<head>标签内部；
+* 内联样式，将CSS样式直接定义在HTML元素内部；
+
+**注意：link标签与@import有区别：**
+* link属于XHTML标签，而@import完全是CSS提供的一种方式。
+link标签除了可以加载CSS外，还可以做很多其它的事情，比如定义RSS，定义rel连接属性等，@import就只能加载CSS了。
+* 加载顺序的差别。当一个页面被加载的时候，link引用的CSS会同时被加 载，而@import引用的CSS会等到页面全部被下载完再被加载。所以有时候浏览@import加载CSS的页面时开始会没有样式（就是闪烁）。
+* 兼容性的差别。由于@import是CSS2.1提出的所以老的浏览器不支持，@import只有在IE5以上的才能识别，而link标签无此问题。
+* @import只能css中再次引入其他样式表，比如可以创建一个主样式表，在主样式表中再引入其他的样式表，这样做有一个缺点，会对网站服务器产生较多的HTTP请求
+
+### 行内元素和块状元素的区别？行内快元素的兼容性使用？（IE8以下）
+
+块级元素（block）特性：
+总是独占一行，表现为另起一行开始，而且其后的元素也必须另起一行显示。
+width、height、padding（内边距）、margin(外边距)都可控制。
+内联元素（inline）特性：
+宽度、高度、内边距的padding-top/padding-bottom和外边距的margin-top、margin-bottom都不可改变（也就是padding和margin的left和right是可以设置的）。
+这里还有其他问题。浏览器还有默认的天生inline-block元素（拥有内在尺寸，可设置高宽，但不会自动换行），有哪些元素是天生inline-block元素？
+它们是`<input>、<img>、<button>、<textare>、<label>` 。
+
+兼容性：display:inline-block;display:inline;zoom:1;
+
+### 文本text
+text-align：文本对其方式 left、center、right、justify
+text-indent：文案第一行缩进距离
+text-decoration： none、underline、line-through、overline
+color：文字颜色
+text-transform：改变文字大小写none、uppercase、lowercase、capitalize
+word-spacing：可以改变字（单词）之间的标准间隔
+letter-spacing：字母间隔修改的是字符或字母之间的间隔
+
+#### 单行文本溢出加 ...如何实现?
+``` css
+.card {
+  white-space:nowrap;/* 文本不会换行，文本会在在同一行上继续 */
+  overflow: hidden;
+  text-overflow: ellipsis;/* 显示省略符号来代表被修剪的文本。 */  
+}
+```
+### 超链接访问过后hover样式就不出现的问题时什么？如何解决？
+被点击访问过的超链接样式不再具有hover和active了，解决方式是改变CSS属性的排列顺序：L-V-H-A（linked, visited, hover, active）。L-V-H-A love hate 用喜欢和讨厌两个词来方便记忆。
+
+### 什么是视差滚动效果，如何给每页做不同的动画？
+视差滚动是指多层背景以不同的速度移动，形成立体的运动效果，具有非常出色的视觉体验
+
+一般把网页解剖为：背景层、内容层和悬浮层。当滚动鼠标滚轮时，各图层以不同速度移动，形成视差的
+
+实现原理
+
+以 “页面滚动条” 作为 “视差动画进度条”
+以 “滚轮刻度” 当作 “动画帧度” 去播放动画的
+监听 mousewheel 事件，事件被触发即播放动画，实现“翻页”效果
+
+### rgba()和opacity的透明效果有什么区别？
+rgba()和opacity都能实现透明效果，但最大的不同是opacity作用于元素，以及元素内的所有内容的透明度，而rgba()只作用于元素的颜色或起背景色。设置rgba透明的元素的子元素不会继承透明效果。
+
+### CSS中可以让文字在垂直和水平方向重叠的两个属性分别是什么？
+垂直方向：line-height。设置成比字体高度还小就可以让两行重叠
+水平方向：letter-spacing。设置为负值即可实现重叠。
+
+### 阐述一下CSS Sprites
+将一个页面涉及到的所有图片都包含到一张大图中去，然后利用CSS的 background-image，background- repeat，background-position 的组合进行背景定位。利用CSS Sprites能很好地减少网页的http请求，从而大大的提高页面的性能；CSS Sprites能减少图片的字节。
+
+### style标签写在body后与body前有什么区别？
+页面加载自上而下 当然是先加载样式。
+
+写在body标签后由于浏览器以逐行方式对HTML文档进行解析，当解析到写在尾部的样式表（外联或写在style标签）会导致浏览器停止之前的渲染，等待加载且解析样式表完成之后重新渲染，在windows的IE下可能会出现FOUC现象（即样式失效导致的页面闪烁问题）
+
+### png、jpg、gif 这些图片格式解释一下，分别什么时候用。有没有了解过webp？
+* png是便携式网络图片（Portable Network Graphics）是一种无损数据压缩位图文件格式.优点是：压缩比高，色彩好。 大多数地方都可以用。
+
+* jpg是一种针对相片使用的一种失真压缩方法，是一种破坏性的压缩，在色调及颜色平滑变化做的不错。在www上，被用来储存和传输照片的格式。
+
+* gif是一种位图文件格式，以8位色重现真色彩的图像。可以实现动画效果.
+
+* webp格式是谷歌在2010年推出的图片格式，压缩率只有jpg的2/3，大小比png小了45%。缺点是压缩的时间更久了，兼容性不好，目前谷歌和opera支持。
+
+### li与li之间有看不见的空白间隔是什么原因引起的？有什么解决办法？
+行框的排列会受到中间空白（回车空格）等的影响，因为空格也属于字符,这些空白也会被应用样式，占据空间，所以会有间隔，把字符大小设为0，就没有空格了。
+
+解决方法：
+
+* 可以将`<li>`代码全部写在一排
+* 浮动li中float：left
+* 在ul中用font-size：0（谷歌不支持）；可以使用letter-space：-3px
+
+### 如果需要手动写动画，你认为最小时间间隔是多久，为什么？
+多数显示器默认频率是60Hz，即1秒刷新60次，所以理论上最小间隔为1/60＊1000ms ＝ 16.7ms。
+
+### 让页面里的字体变清晰，变细用CSS怎么做？
+-webkit-font-smoothing在window系统下没有起作用，但是在IOS设备上起作用-webkit-font-smoothing：antialiased是最佳的，灰度平滑。
+
+### 怎么让Chrome支持小于12px 的文字？
+p {
+  font-size:10px;
+  -webkit-transform:scale(0.8);
+}
+// 0.8是缩放比例
+
+### 你对line-height是如何理解的？
+line-height 指一行字的高度，包含了字间距，实际上是下一行基线到上一行基线距离
+如果一个标签没有定义 height 属性，那么其最终表现的高度是由 line-height 决定的
+一个容器没有设置高度，那么撑开容器高度的是 line-height 而不是容器内的文字内容
+把 line-height 值设置为 height 一样大小的值可以实现单行文字的垂直居中
+line-height 和 height 都能撑开一个高度，height 会触发 haslayout，而 line-height 不会
+
+### 网站图片文件，如何点击下载？而非点击预览？
+``` html
+<a href="logo.jpg" download>下载</a> <a href="logo.jpg" download="网站LOGO" >下载</a>
+```
+### input [type=search] 搜索框右侧小图标如何美化？
+``` css
+input[type="search"]::-webkit-search-cancel-button{
+  -webkit-appearance: none;
+  height: 15px;
+  width: 15px;
+  border-radius: 8px;
+  background:url("images/searchicon.png") no-repeat 0 0;
+  background-size: 15px 15px;
+}
+```
+### 如何修改Chrome记住密码后自动填充表单的黄色背景？
+产生原因：由于Chrome默认会给自动填充的input表单加上 input:-webkit-autofill 私有属性造成的
+解决方案1：在form标签上直接关闭了表单的自动填充：autocomplete="off"
+解决方案2：input:-webkit-autofill { background-color: transparent; }
+
+### ::before 和 :after中双冒号和单冒号有什么区别？解释一下这2个伪元素的作用
+* 单冒号(:)用于CSS3伪类，双冒号(::)用于CSS3伪元素。
+
+* ::before就是以一个子元素的存在，定义在元素主体内容之前的一个伪元素。并不存在于dom之中，只存在在页面之中。
+
+:before 和 :after 这两个伪元素，是在CSS2.1里新出现的。起初，伪元素的前缀使用的是单冒号语法，但随着Web的进化，在CSS3的规范里，伪元素的语法被修改成使用双冒号，成为::before ::after
+
+### 什么是响应式设计？响应式设计的基本原理是什么？
+响应式网站设计(Responsive Web design)是一个网站能够兼容多个终端，而不是为每一个终端做一个特定的版本。
+
+基本原理是通过媒体查询检测不同的设备屏幕尺寸做处理。
+
+### 全屏滚动的原理是什么？用到了CSS的哪些属性？
+* 原理：有点类似于轮播，整体的元素一直排列下去，假设有5个需要展示的全屏页面，那么高度是500%，只是展示100%，剩下的可以通过transform进行y轴定位，也可以通过margin-top实现
+
+* overflow:hidden; transform:translate(100%, 100%); display:none; overflow：hidden；transition：all 1000ms ease；
+
+### CSS优化、提高性能的方法有哪些？
+多个css合并，尽量减少HTTP请求
+将css文件放在页面最上面
+移除空的css规则
+避免使用CSS表达式
+选择器优化嵌套，尽量避免层级过深
+充分利用css继承属性，减少代码量
+抽象提取公共样式，减少代码量
+属性值为0时，不加单位
+属性值为小于1的小数时，省略小数点前面的0
+css雪碧图
+
+### 什么是 FOUC(Flash of Unstyled Content)？ 如何来避免 FOUC？
+当使用 @import 导入 CSS 时，会导致某些页面在 IE 出现奇怪的现象： 没有样式的页面内容显示瞬间闪烁，这种现象称为“文档样式短暂失效”，简称为FOUC
+产生原因：当样式表晚于结构性html加载时，加载到此样式表时，页面将停止之前的渲染。
+等待此样式表被下载和解析后，再重新渲染页面，期间导致短暂的花屏现象。
+解决方法：使用 link 标签将样式表放在文档 head
+
+### 清除浮动最佳实践（after伪元素闭合浮动）：
+``` css
+clearfix:after{
+    content: "\200B";
+    display: table; 
+    height: 0;
+    clear: both;
+  }
+  .clearfix{
+    *zoom: 1;
+  }
+```
+
+### 解释下什么是浮动和它的工作原理？
+非IE浏览器下，容器不设高度且子元素浮动时，容器高度不能被内容撑开。 此时，内容会溢出到容器外面而影响布局。这种现象被称为浮动（溢出）。
+工作原理：
+浮动元素脱离文档流，不占据空间（引起“高度塌陷”现象）
+浮动元素碰到包含它的边框或者其他浮动元素的边框停留
+
+### 浮动元素引起的问题？
+
+父元素的高度无法被撑开，影响与父元素同级的元素
+与浮动元素同级的非浮动元素会跟随其后
+
+### css hack原理及常用hack
+原理：利用不同浏览器对CSS的支持和解析结果不一样编写针对特定浏览器样式。
+常见的hack有
+属性hack：比如IE6能识别下划线“_”和星号“*”，IE7能识别星号“*”，但不能识别下划线”_ ”，而firefox两个都不能认识。
+选择器hack：比如IE6能识别*html .class{}，IE7能识别*+html .class{}或者*:first-child+html .class{}。
+IE条件注释
+
+### 一个满屏 品 字布局 如何设计?
+简单的方式：
+上面的div宽100%，
+下面的两个div分别宽50%，
+然后用float或者inline使其不换行即可
+
+### 用纯CSS创建一个三角形的原理是什么？
+``` css
+// 把上、左、右三条边隐藏掉（颜色设为 transparent）
+#demo {
+  width: 0;
+  height: 0;
+  border-width: 20px;
+  border-style: solid;
+  border-color: transparent transparent red transparent;
+}
+```
+
+### hasLayout
+hasLayout可以简单看作是IE5.5/6/7中的BFC(Block Formatting Context)。也就是一个元素要么自己对自身内容进行组织和尺寸计算(即可通过width/height来设置自身的宽高)，要么由其containing block来组织和尺寸计算。而IFC（即没有拥有布局）而言，则是元素无法对自身内容进行组织和尺寸计算，而是由自身内容来决定其尺寸（即仅能通过line-height设置内容行距，通过行距来支撑元素的高度；也无法通过width设置元素宽度，仅能由内容来决定而已）
+当hasLayout为true时(就是所谓的"拥有布局")，相当于元素产生新BFC，元素自己对自身内容进行组织和尺寸计算;
+当hasLayout为false时(就是所谓的"不拥有布局")，相当于元素不产生新BFC，元素由其所属的containing block进行组织和尺寸计算.
+
+### 元素竖向的百分比设定是相对于容器的高度吗？
+当按百分比设定一个元素的宽度时，它是相对于父容器的宽度计算的，但是，对于一些表示竖向距离的属性，例如 padding-top , padding-bottom , margin-top , margin-bottom 等，当按百分比设定它们时，依据的也是父容器的宽度，而不是高度。
+
+### margin和padding分别适合什么场景使用？
+何时使用margin：
+
+➤需要在border外侧添加空白
+
+➤空白处不需要背景色
+
+➤上下相连的两个盒子之间的空白，需要相互抵消时。
+
+何时使用padding：
+
+➤需要在border内侧添加空白
+
+➤空白处需要背景颜色
+
+➤上下相连的两个盒子的空白，希望为两者之和。
+
+兼容性的问题：在IE5 IE6中，为float的盒子指定margin时，左侧的margin可能会变成两倍的宽度。通过改变padding或者指定盒子的display：inline解决。
+
+### 在网页中的应该使用奇数还是偶数的字体？为什么呢？
+使用偶数字体。偶数字号相对更容易和 web 设计的其他部分构成比例关系。Windows 自带的点阵宋体（中易宋体）从 Vista 开始只提供 12、14、16 px 这三个大小的点阵，而 13、15、17 px时用的是小一号的点。（即每个字占的空间大了 1 px，但点阵没变），于是略显稀疏。
+
+### 浏览器是怎样解析CSS选择器的？
+CSS选择器的解析是从右向左解析的。若从左向右的匹配，发现不符合规则，需要进行回溯，会损失很多性能。
+
+若从右向左匹配，先找到所有的最右节点，对于每一个节点，向上寻找其父节点直到找到根元素或满足条件的匹配规则，则结束这个分支的遍历。
+
+两种匹配规则的性能差别很大，是因为从右向左的匹配在第一步就筛选掉了大量的不符合条件的最右节点（叶子节点），而从左向右的匹配规则的性能都浪费在了失败的查找上面。
+
+而在 CSS 解析完毕后，需要将解析的结果与 DOM Tree 的内容一起进行分析建立一棵 Render Tree，最终用来进行绘图。
+
+在建立 Render Tree 时（WebKit 中的「Attachment」过程），浏览器就要为每个 DOM Tree 中的元素根据 CSS 的解析结果（Style Rules）来确定生成怎样的 Render Tree。
+
+### CSS优化、提高性能的方法有哪些？
+➤避免过度约束
+
+➤避免后代选择符
+
+➤避免链式选择符
+
+➤使用紧凑的语法
+
+➤避免不必要的命名空间
+
+➤避免不必要的重复
+
+➤最好使用表示语义的名字。一个好的类名应该是描述他是什么而不是像什么
+
+➤避免！important，可以选择其他选择器
+
+➤尽可能的精简规则，你可以合并不同类里的重复规则
+
+### 移动端的布局用过媒体查询吗？
+通过媒体查询可以为不同大小和尺寸的媒体定义不同的css，适应相应的设备的显示。
+
+➤`<head>`里边
+
+`<link rel="stylesheet" type="text/css" href="xxx.css" media="only screen and (max-device-width:480px)">`
+
+➤CSS : @media only screen and (max-device-width:480px) {/css样式/}
+
+### 设置元素浮动后，该元素的display值是多少？
+自动变成display:block
+
+### position跟display、overflow、float这些特性相互叠加后会怎么样？
+display属性规定元素应该生成的框的类型；position属性规定元素的定位类型；float属性是一种布局方式，定义元素在哪个方向浮动。
+
+类似于优先级机制：position：absolute/fixed优先级最高，有他们在时，float不起作用，display值需要调整。float 或者absolute定位的元素，只能是块元素或表格。
+
+### 为什么要初始化CSS样式
+因为浏览器的兼容问题，不同浏览器对有些标签的默认值是不同的，如果没对CSS初始化往往会出现浏览器之间的页面显示差异。
+
+### absolute的containing block计算方式跟正常流有什么不同？
+无论属于哪种，都要先找到其祖先元素中最近的 position 值不为 static 的元素，然后再判断：
+
+➤若此元素为 inline 元素，则 containing block 为能够包含这个元素生成的第一个和最后一个 inline box 的 padding box (除 margin, border 外的区域) 的最小矩形；
+
+➤否则,则由这个祖先元素的 padding box 构成。
+
+如果都找不到，则为 initial containing block。
+
+补充：
+
+➤static(默认的)/relative：简单说就是它的父元素的内容框（即去掉padding的部分）
+
+➤absolute: 向上找最近的定位为absolute/relative的元素
+
+➤fixed: 它的containing block一律为根元素(html/body)
+
+### 前端页面有哪三层构成，分别是什么？作用是什么？
+结构层、表示层、行为层
+结构层（structural layer）：由HTML或XHTML之类的标记语言负责创建。
+表示层（presentation layer）:由css负责创建。
+行为层（behaviorlayer）:负责回答“内容应该如何对事件做出反应”这一问题。这是 Javascript 语言和 DOM主宰的领域。
+
+### 简述对Web语义化的理解？
+就是让浏览器更好的读懂你写的代码，在进行HTML结构、表现、行为设计时，尽量使用语义化的标签，使程序代码简洁明了，易于进行web操作和网站SEO，方便团队的一种标准，以图实现一种“无障碍”的web开发。
+
+### 合理的页面布局中常听过结构与表现分离，那么结构是什么？表现是什么？
+结构是html,表现是css
+
+### 写出video标签中预加载视频用到的属性是什么
+preload
+
+### 写一下audio标签中，如何实现音乐的暂停和播放
+play()开始,pause()暂停
+
+### box-sizing、transition、translate分别是什么？
+1、box-sizing:用来指定模型的大小的计算方式。主要分为border-box(从边框固定盒子大小)、content-box(从内容固定盒子大小)两种计算方式。
+2、transition:当前元素只要有"属性"发生变化时，可以平滑的进行过渡。通过transition-propety设置过渡属性；transition-duration设置过渡时间；transition-timing-function设置过渡速度；transition-delay设置过渡延时。
+3、translate：通过移动改变元素的位置；有x,y,z三个属性
+
+### iframe的作用？
+用法
+1、iframe是用来在网页中插入第三方页面，早期的页面使用iframe主要是用于导航栏这种很多页面都相同的部分，这样在切换页面的时候避免重复下载。
+
+优点
+1、便于修改，模拟分离，像一些信息管理系统会用到。
+2、但现在基本不推荐使用。除非特殊需要，一般不推荐使用。
+
+缺点
+1、iframe的创建比一般的DOM元素慢了1-2个数量级
+2、iframe标签会阻塞页面的的加载，如果页面的onload事件不能及时触发，会让用户觉得网页加载很慢，用户体验不好，在Safari和Chrome中可以通过js动态设置iframe的src属性来避免阻塞。
+3、iframe对于SEO不友好，替换方案一般就是动态语言的Incude机制和ajax动态填充内容等。
+
+### 介绍以下你对浏览器内核的理解？
+1、主要分成两部分：渲染引擎（layout engineer或Rendering Engine）和JS引擎。
+2、渲染引擎：负责取得网页的内容（HTML、XML、图像等等）、整理讯息（例如加入CSS等）、以及计算网页的显示方式、然后会输出至显示器或打印机。浏览器的内核的不同对于网页的语法解释会有不同、所以渲染的效果也不相同。所有网页浏览器、电子邮件客户端以及其他需要编辑、显示网络内容的应用程序都需要内核
+3、JS引擎则：解析和执行javascript来实现网页的动态效果。
+4、最开始渲染引擎和JS引擎并没有区分得很明确，后来JS引擎越来越独立，内核九倾向于只指渲染引擎。
+
+### css盒模型有哪些及区别content-box border-box padding-box
+IE盒子模型box-sizing:border-box;（怪异模式）
+
+W3C标准盒子模型 box-sizing:content-box;（标准模式）默认模式
+
+content-box:这是默认样式指定CSS标准。测量width和height属性只包括的内容，但不是border, margin, 或者 padding。
+
+padding-box:width和height属性包括padding的大小，不包括border和margin
+
+border-box:width和height属性包括padding和border，但不是margin。这是盒模型的文档时，Internet Explorer使用Quirks模式。
+
+content-box不包含padding，border-box包含padding。所以如果你设置的大小是一样的，content-box看起来，会比border-box大
+
+### html5哪些操作可以SEO优化
+
+title标签；meta标签；header标签；footer标签
+元标签（meta标签）；导航标签（nav标签）；文章标签（article标签）；左或右侧标签（aside标签）
+
+### html document是干嘛的？
+HTML即：超文本标记语言，标准通用标记语言的一个应用，“超文本”就是指页面内可以包含图片、链接、甚至音乐、程序等非文字元素。
+HTML Document即：HTML Document对象，每个载入浏览器的HTML文档都会成为Document对象
+由于Document对象是window对象的一部分，所以可通过window.document属性对其进行访问。
+
+### HTML5为什么只需要写<!DOCTYPE HTML>？
+HTML5不基于SGML，因此不需要对DTD进行引用，但是需要doctype来规范浏览器的行为（让浏览器按照它们应该的方式来进行）
+而HTML4.01基于SGML，所以需要对DTD进行引用，才能告知浏览器文档所使用的文档类型。
+
+### Doctype？严格模式与混杂模式如何触发这两种模式，区分它们有何意义？
+用于声明文档使用哪种规范（html/Xhtml）一般为严格过渡基于框架的html文档。
+加入XML声明可触发，解析方式更改为IE5.5拥有IE5.5的Bug。
+
+### Doctype作用？标准模式与兼容模式各种什么区别？
+！Doctype声明位于HTML文档的第一行，处于html标签之前。告知浏览器的解析器用什么文档标准解析这个文档。doctype不存在或格式不正确会导致文档以兼容模式呈现。
+标准模式的排版和JS运作模式都是该浏览器支持的最高标准运行。在兼容模式中，页面以宽松的向后兼容的方式来显示，模拟老式浏览器的行为以防止站点无法工作。
+
+### HTML5为什么只需要写！DOCTYPE HTML？
+HTMl5不基于SGML,因此不需要对DTD进行引用，但是需要doctype来规范浏览器的行为(让浏览器按照它们应该的方式来运行)；而HTMl4.01基于SGMA，所以需要对DTD进行引用，才能告知浏览器文档所使用的文档类型。
+
+### 如何实现浏览器内多个标签页之间的通信？
+
+调用localstorage,cookies等本地存储方式
+WebSocket、SharedWorker
+localstroge另一个浏览器上下文被添加、删除或修改时，它都会触发一个事件，我们通过监听事件，控制它的值来进行页面信息通信。
+注意quirks:Safari在无痕迹模式下设置localstorge值抛出QuotExceededError的异常。
+
+### 请描述一下cookies、sessionStorage和localStorage区别？
+
+cookie是网站为了标示用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。
+cookie数据始终在同源的http请求中携带（即使不需要），即会在浏览器和服务器间来回传递。
+sessionStorage和localStorage不会自动把数据发给服务器，仅在本地保存
+存储大小：
+cookie数据大小不能超过4K。
+sessionStorage和localStorage虽然也有存储大小的限制，但比cookie大得多，可以达到5M或更大。
+有期时间：
+localStorage：存储持久数据，浏览器关闭后数据不丢失除非主动删除数据；
+sessionStorage：数据在当前浏览器窗口关闭后自动删除
+cookie：设置的cookie过期时间之前一直有效，即使窗口或浏览器关闭
+
+### 请描述一下cookies,sessionStorage（会话存储）和localStrorage（本地存储）的区别？
+cookie在浏览器和服务器间来回传递。sessionStorage和localStorage不会；
+sessionStorage和localStorage的存储空间更大；
+sessionStorage和localStorage有更多丰富易用的接口；
+sessionStorage和localStorage各自独立的存储空间；
+
+### 常见的浏览器内核有哪些？
+Trident内核：IE,MaxThon,TT,The Word,360,搜狗浏览器等。[又称为MSHTML]
+Gecko内核：Netscape6及以上版本，FF,MozillaSuite/SeaMonkey等；
+Presto内核：Opera7及以上。[Opera内核原为：Presto，现为：Blink]
+Webkit内核：Safari,Chrome等。[Chrome的:Blink(Webkit的分支)]
+
+### 简述一下你对HTML语义化的理解？
+1、用正确的标签做正确的事情。
+2、html语义化让页面的内容结构化，结构更清晰，便于对浏览器，搜索引擎解析；
+3、即使在没有样式CSS情况下也以一种文档格式显示，并且是容易阅读的；
+4、搜索引擎的爬虫也依赖于HTML标记确定上下文和各个关键字的权重，利用SEO;
+5、使阅读源代码的人对网站更容易将网站分块，便于阅读维护理解。
+
+### 什么是语义化的HTML？
+直观的认识标签对于搜索引擎的抓取有好处，用正确的标签做正确的事情！
+HTML语义化就是让页面的内容结构化，便于对浏览器，搜索引擎解析；
+在没有样式css情况下也以一种文档格式显示，并且是容易阅读。搜索引擎的爬虫依赖于标记来确定上下文和各个关键字的权重，利于SEO。
+在阅读源代码的人对网站更容易将网站分块，便于阅读维护理解。
+
+### XHTML和HTML有什么区别
+HTML是一种基本的WEB网页设计语言，XHTML是一个基于XMl的置标语言
+最主要的不同
+XHTML元素必须被正确地嵌套。
+XHTML元素必须被关闭
+标签名必须用小写字母
+XHTMl文档必须拥有根元素
+
+### 一个高度自适应的div，里面有两个div，一个高度100px，希望另一个填满剩下的高度
+方案1： .sub { height: calc(100%-100px); }
+方案2： .container { position:relative; } .sub { position: absolute; top: 100px; bottom: 0; }
+方案3： .container { display:flex; flex-direction:column; } .sub { flex:1; }
 
 ## Node 面试题
 ### npm install的实现原理
