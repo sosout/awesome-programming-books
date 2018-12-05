@@ -61,6 +61,77 @@ ajax和jsonp的区别：
 不同点：ajax的核心是通过xmlHttpRequest获取内容
 jsonp的核心则是动态添加`<script>`标签来调用服务器 提供的js脚本。
 
+### new 命令
+具体参考：[实例对象与 new 命令](https://wangdoc.com/javascript/oop/new.html)
+
+new命令的作用，就是执行构造函数，返回一个实例对象。
+
+为了保证构造函数必须与new命令一起使用，一个解决办法是，构造函数内部使用严格模式，即第一行加上use strict。这样的话，一旦忘了使用new命令，直接调用构造函数就会报错。
+``` js
+function Fubar(foo, bar) {
+  'use strict';
+  this._foo = foo;
+  this._bar = bar;
+}
+
+Fubar()
+// TypeError: Cannot set property '_foo' of undefined
+```
+
+另一个解决办法，构造函数内部判断是否使用new命令，如果发现没有使用，则直接返回一个实例对象。
+``` js
+function Fubar(foo, bar) {
+  if (!(this instanceof Fubar)) {
+    return new Fubar(foo, bar);
+  }
+
+  this._foo = foo;
+  this._bar = bar;
+}
+
+Fubar(1, 2)._foo // 1
+(new Fubar(1, 2))._foo // 1
+```
+
+**new 命令的原理**
+使用new命令时，它后面的函数依次执行下面的步骤。
+1. 创建一个空对象，作为将要返回的对象实例。
+2. 将这个空对象的隐式原型，指向构造函数的prototype属性。
+3. 将这个空对象赋值给函数内部的this关键字。
+4. 开始执行构造函数内部的代码，如果无返回值或者返回一个非对象值，则将新创建的空对象作为将要返回的对象；如果返回值是一个新对象的话那么直接返回该对象。
+
+也就是说，构造函数内部，this指的是一个新生成的空对象，所有针对this的操作，都会发生在这个空对象上。构造函数之所以叫“构造函数”，就是说这个函数的目的，就是操作一个空对象（即this对象），将其“构造”为需要的样子。
+
+new命令简化的内部流程，可以用下面的代码表示。
+```js
+function _new(/* 构造函数 */ constructor, /* 构造函数参数 */ params) {
+  // 将 arguments 对象转为数组
+  var args = [].slice.call(arguments);
+  // 取出构造函数
+  var constructor = args.shift();
+  // 创建一个空对象，继承构造函数的 prototype 属性
+  var context = Object.create(constructor.prototype);
+  // 执行构造函数
+  var result = constructor.apply(context, args);
+  // 如果返回结果是对象，就直接返回，否则返回 context 对象
+  return (typeof result === 'object' && result != null) ? result : context;
+}
+
+// 实例
+var actor = _new(Person, '张三', 28);
+```
+
+### this、apply、call、bind
+参考：
+[this、apply、call、bind](https://juejin.im/post/59bfe84351882531b730bac2)
+[前端面试之手写一个bind方法](https://zhuanlan.zhihu.com/p/45992705)
+
+相同之处：改变函数体内 this 的指向。
+不同之处：
+
+call、apply的区别：接受参数的方式不一样。
+bind：不立即执行。而apply、call 立即执行。
+
 ### JavaScript 数组打乱顺序
 参考：
 * [如何将一个 JavaScript 数组打乱顺序？](https://www.zhihu.com/question/68330851/answer/266506621)
@@ -2414,3 +2485,12 @@ node_modules
 
 ### node 定时器
 [Node 定时器详解](http://www.ruanyifeng.com/blog/2018/02/node-event-loop.html)
+
+
+### 描述一下所做过的项目中遇到最困难的技术问题是什么，最后怎么解决？
+首先我先说一下项目中在写法上我优化的点：
+1、**require.context：**创建自己的（模块）上下文，这个方法有 3 个参数：要搜索的文件夹目录，是否还应该搜索它的子目录，以及一个匹配文件的正则表达式。只要重复性的引入文件，我都回使用该方法，比较典型的就是vuex 自动注册store，根据webpack的require.context及store的registerModule方法来自动注册store的modules，多人协作开发不需要担心代码冲突，不需要每个store.js都要import引入。
+
+### Http
+参考：
+[程序员必备基础知识：通信协议——Http、TCP、UDP](https://zhuanlan.zhihu.com/p/31059450)
