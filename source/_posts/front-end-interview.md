@@ -9,6 +9,15 @@ categories:
 
 ## JavaScript 面试题
 
+### 数组去重
+``` js
+// 方法一
+Array.from(new Set([1, '1', 2, 2, 3])) // [1, "1", 2, 3]
+
+// 方法二
+[...new Set([1, '1', 2, 2, 3])] // [1, "1", 2, 3]
+```
+
 ### 简述ajax执行流程
 ``` js
 var xhr =null;//创建对象 
@@ -169,6 +178,22 @@ Object.keys(counterArray).length // Output 3
 
 ### promise
 更多参考：[async/await 在chrome 环境和 node 环境的 执行结果不一致，求解？](https://www.zhihu.com/question/268007969)
+
+#### 什么是Promise？
+所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件的结果。从语法上说，Promise 是一个对象，从它可以获取异步操作的消息。Promise 提供统一的 API，各种异步操作都可以用同样的方法进行处理，让开发者不用再关注于时序和底层的结果。Promise的状态具有不受外界影响和不可逆两个特点。
+
+#### Promise中的异步模式有哪些？有什么区别？
+因为ES6中的Promise中只有这两个模式all和race，其他的如first、any、last等都是其他Promise库提供的。
+
+all会将传入的数组中的所有promise全部决议以后，将决议值以数组的形式传入到观察回调中，任何一个promise决议为拒绝，那么就会调用拒绝回调。
+
+race会将传入的数组中的所有promise中第一个决议的决议值传递给观察回调，即使决议结果是拒绝。
+
+#### 如果向Promise.all()和Promise.race()传递空数组，运行结果会有什么不同？
+all会立即决议，决议结果是fullfilled，值是undefined
+
+race会永远都不决议，程序卡死……
+
 #### 题目：红灯三秒亮一次，绿灯一秒亮一次，黄灯2秒亮一次；如何让三个灯不断交替重复亮灯？（用Promse实现）
 思路：先用promise控制三种灯的执行顺序，然后用递归实现循环亮灯
 ``` js
