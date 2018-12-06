@@ -1135,6 +1135,57 @@ slot 实际上是一个抽象元素，有点类似template，设计思想有点�
 
 举例说明下： 项目中需要一个模态框，包括成功和失败两种情况，其中该模态框有文案和背景图片差异，那么模态框可以看作一个组件，而文案和背景图片就可以用slot。
 
+### 数据绑定的实现方法
+* 数据劫持(vue)：通过Object.defineProperty() 去劫持数据每个属性对应的getter和setter
+* 脏值检测(angular)：通过特定事件比如input，change，xhr请求等进行脏值检测。
+* 发布-订阅模式(backbone)：通过发布消息，订阅消息进行数据和视图的绑定监听。
+
+### MVVM
+参考：
+[合格前端系列第三弹-实现一个属于我们自己的简易MVVM库](https://zhuanlan.zhihu.com/p/27028242)
+[剖析Vue实现原理 - 如何实现双向绑定mvvm](https://github.com/DMQ/mvvm)
+
+![mvvm1.jpg](/images/front-end-interview/mvvm1.jpg)
+
+如上图所示，我们可以看到，整体实现分为四步
+
+1、实现一个Observer，对数据进行劫持，通知数据的变化
+2、实现一个Compile，对指令进行解析，初始化视图，并且订阅数据的变更，绑定好更新函数
+3、实现一个Watcher，将其作为以上两者的一个中介点，在接收数据变更的同时，让Dep添加当前Watcher，并及时通知视图进行update
+4、实现MVVM，整合以上三者，作为一个入口函数
+
+### 谈Vue的依赖追踪系统 ——搞懂methods watch和compute的区别和联系
+* methods里面定义的函数，是需要主动调用的，而和watch和computed相关的函数，会自动调用,完成我们希望完成的作用。watch、computed是响应式的，methods并非响应式。都是希望在依赖数据发生改变的时候，被依赖的数据根据预先定义好的函数，发生“自动”的变化。但watch和computed也有明显不同的地方：
+
+watch和computed各自处理的数据关系场景不同
+
+watch擅长处理的场景：一个数据影响多个数据
+computed擅长处理的场景：一个数据受多个数据影响
+
+计算属性在依赖数据项的初始化时就会执行，但watch在watch对象初始化时并不会执行。
+
+* methods里面定义的是函数，你显然需要像"fuc()"这样去调用它（假设函数为fuc）computed是计算属性，事实上和和data对象里的数据属性是同一类的（使用上）,watch:类似于监听机制+事件机制：例如：
+``` js
+watch: {
+   firstName: function (val) {  this.fullName = val + this.lastName }
+}
+```
+firstName的改变是这个特殊“事件”被触发的条件，而firstName对应的函数就相当于监听到事件发生后执行的方法
+
+* computed是带缓存的，只有其引用的响应式属性发生改变时才会重新计算，而methods里的函数在每次调用时都要执行。
+* computed中的成员可以只定义一个函数作为只读属性，也可以定义get/set变成可读写属性，这点是methods中的成员做不到的
+* computed是以对象的属性方式存在的，在视图层直接调用就可以得到值，而methods必须以函数形式调用,例如：
+``` html
+<!-- computed -->
+<div>{{msg}}</div>
+<!-- methods -->
+<div>{{msg()}}</div>
+```
+可见，computed直接以对象属性方式调用，而methods必须要函数执行才可以得到结果。
+
+### 生命周期
+[Vue2.0 探索之路——生命周期和钩子函数的一些理解](https://segmentfault.com/a/1190000008010666?utm_source=tag-newest)
+
 ## CSS 面试题
 
 ### opacity:0,visibility:hidden,display:none的区别
