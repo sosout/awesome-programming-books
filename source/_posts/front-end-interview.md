@@ -16,7 +16,39 @@ Array.from(new Set([1, '1', 2, 2, 3])) // [1, "1", 2, 3]
 
 // 方法二
 [...new Set([1, '1', 2, 2, 3])] // [1, "1", 2, 3]
+
+// 方法三 
+function unique (arr) {
+  const seen = new Map()
+  return arr.filter((a) => !seen.has(a) && seen.set(a, 1))
+}
+unique([1, '1', 2, 2, 3]) // [1, "1", 2, 3]
+
+// 方法四
+function unique(arr) {
+    return arr.filter(function(item, index){ //item 表示数组中的每个元素，index 是每个元素的出现位置。
+       return arr.indexOf(item) === index; // indexOf 返回第一个索引值
+   });
+}
+unique([1, '1', 2, 2, 3]) // [1, "1", 2, 3]
+
+// 方法5️
+function unique(arr) {
+    var newArr = [];                  
+    arr.sort();
+    for(var i = 0; i < arr.length; i++){
+        if( arr[i] !== arr[i+1]){
+            newArr.push(arr[i]);
+        }
+    }
+    return newArr;
+}
+
+unique([1, '1', 2, 2, 3]) // [1, "1", 2, 3]
 ```
+
+### ajax 是什么
+异步javascript和XML，是指一种创建交互式网页应用的网页开发技术。通过后台与服务器进行少量数据交换，AJAX可以使网页实现异步更新。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新。
 
 ### 简述ajax执行流程
 ``` js
