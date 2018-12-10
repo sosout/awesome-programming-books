@@ -9,6 +9,34 @@ categories:
 
 ## JavaScript 面试题
 
+### 异步解决方案
+#### Callback 回调函数
+当多个异步事务多级依赖时，回调函数会形成多级的嵌套，代码变成金字塔型结构。虽然能解决异步问题，但这使得代码得看难懂，更使得调试、重构的过程充满风险。
+
+#### Promise
+Promise比传统解决方案更加合理和强大，是更加好的异步解决方案，promise对象有以下四个特点：
+1. promise 可能有三种状态：等待（pending）、已完成（resolved）、已拒绝（rejected）。
+2. promise 的状态只可能从“等待”转到“完成”态或者“拒绝”态，不能逆向转换，同时“完成”态和“拒绝”态不能相互转换。
+3. promise对象必须实现then方法，而且then必须返回一个promise ，同一个 promise 的then可以调用多次（链式），并且回调的执行顺序跟它们被定义时的顺序一致。
+4. then方法接受两个参数，第一个参数是成功时的回调，在 promise 由“等待”态转换到“完成”态时调用，另一个是失败时的回调，在 promise 由“等待”态转换到“拒绝”态时调用
+
+代码看起来更加符合逻辑、可读性更强。Promise并没有改变JS异步执行的本质，从写法上甚至还能看到一点点callback的影子。
+
+#### Generator
+Generator函数很特殊，理解起来比promise和callback更加难，从语法上将，generator具备以下特质：
+1. 定义Generator时，需要使用function*。
+2. 使用时生成一个Generator对象。
+3. 执行.next()激活暂停状态，开始执行内部代码，直到遇到yield，返回此时执行的结果，并记住此时执行的上下文，暂停。
+
+#### Async/Await
+通过进一步的演进，async和await函数应运而生。它们的个性特征如下：
+1. async 表示这是一个async函数，而await只能在这个函数里面使用。
+2. await 表示在这里等待await后面的操作执行完毕，再执行下一句代码。
+3. await 后面紧跟着的最好是一个耗时的操作或者是一个异步操作。
+4. await后面必须是一个Promise对象，如果不是会被转化为一个已完成状态的Promise
+
+
+
 ### 数组去重
 ``` js
 // 方法一
@@ -2620,3 +2648,7 @@ node_modules
 ### Http
 参考：
 [程序员必备基础知识：通信协议——Http、TCP、UDP](https://zhuanlan.zhihu.com/p/31059450)
+
+### koa 中间件机制
+参考：
+[理解 Koa 的中间件机制](https://github.com/frontend9/fe9-library/issues/104)
