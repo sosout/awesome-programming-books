@@ -29,7 +29,24 @@ HTTP请求包括请求报头和请求主体两个部分
 #### 页面渲染
 解析html以构建dom树 -> 解析 CSS 会产生 CSS 规则树 -> 根据DOM树和CSSOM来构建render树 -> 布局render树 -> 绘制render树
 
+### Http报头Accept与Content-Type的区别
+
+[Http报头Accept与Content-Type的区别](https://blog.csdn.net/z69183787/article/details/52313101)
+
+### get和post的区别
+
+[99%的人都理解错了HTTP中GET与POST的区别](http://www.techweb.com.cn/network/system/2016-10-11/2407736.shtml)
+
+### http协议状态码，302和303的区别
+
+
+
 ## JavaScript 面试题
+
+### 构造函数
+#### 缺点
+同一个构造函数的多个实例之间，无法共享属性，从而造成对系统资源的浪费。
+
 ### 异步解决方案
 #### Callback 回调函数
 当多个异步事务多级依赖时，回调函数会形成多级的嵌套，代码变成金字塔型结构。虽然能解决异步问题，但这使得代码得看难懂，更使得调试、重构的过程充满风险。
@@ -1220,7 +1237,7 @@ this.setState((prevState, props) => {
 })
 ```
 这段代码没啥问题，不过只是不太常用罢了。
-## vue 面试题
+## Vue 面试题
 ### vue 3.0 变化
 **vue3.0的改进思路**
 vue最主要的特点就是响应式机制、模板、以及对象式的组件声明语法，而3.0对这三部分都做了更改。
