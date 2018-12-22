@@ -12,6 +12,10 @@ categories:
 [javascript中的链表结构]()
 
 ## 必考面试题
+
+### 常见的HTTP状态码(HTTP Status Code)说明
+[常见的HTTP状态码(HTTP Status Code)说明](https://blog.csdn.net/Prototype___/article/details/81053395)
+
 ### 从输入URL到浏览器显示页面发生了什么
 这个过程可以大致分为两个部分：网络通信和页面渲染。
 #### 网络通信
@@ -33,7 +37,28 @@ HTTP请求包括请求报头和请求主体两个部分
 #### 页面渲染
 解析html以构建dom树 -> 解析 CSS 会产生 CSS 规则树 -> 根据DOM树和CSSOM来构建render树 -> 布局render树 -> 绘制render树
 
+### Http报头Accept与Content-Type的区别
+
+[Http报头Accept与Content-Type的区别](https://blog.csdn.net/z69183787/article/details/52313101)
+
+### get和post的区别
+
+[99%的人都理解错了HTTP中GET与POST的区别](http://www.techweb.com.cn/network/system/2016-10-11/2407736.shtml)
+
+### http协议状态码，302和303的区别
+
+## Es6 面试题
+### JavaScript中var、let、const区别
+使用var声明的变量，其作用域为该语句所在的函数内，且存在变量提升现象；
+使用let声明的变量，其作用域为该语句所在的代码块内，不存在变量提升；
+使用const声明的是常量，在后面出现的代码中不能再修改该常量的值。
+
 ## JavaScript 面试题
+
+### 构造函数
+#### 缺点
+同一个构造函数的多个实例之间，无法共享属性，从而造成对系统资源的浪费。
+
 ### 异步解决方案
 #### Callback 回调函数
 当多个异步事务多级依赖时，回调函数会形成多级的嵌套，代码变成金字塔型结构。虽然能解决异步问题，但这使得代码得看难懂，更使得调试、重构的过程充满风险。
@@ -78,6 +103,10 @@ co模块约定，yield命令后面只能是 Thunk 函数或 Promise 对象，而
 async函数的返回值是 Promise 对象，这比 Generator 函数的返回值是 Iterator 对象方便多了。你可以用then方法指定下一步的操作。
 
 进一步说，async函数完全可以看作多个异步操作，包装成的一个 Promise 对象，而await命令就是内部then命令的语法糖。
+
+### Thunk 函数
+
+[Thunk 函数的含义和用法](http://www.ruanyifeng.com/blog/2015/05/thunk.html)
 
 ### 数组去重
 ``` js
@@ -1224,7 +1253,7 @@ this.setState((prevState, props) => {
 })
 ```
 这段代码没啥问题，不过只是不太常用罢了。
-## vue 面试题
+## Vue 面试题
 ### vue 3.0 变化
 **vue3.0的改进思路**
 vue最主要的特点就是响应式机制、模板、以及对象式的组件声明语法，而3.0对这三部分都做了更改。
