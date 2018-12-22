@@ -8,6 +8,10 @@ categories:
 ---
 
 ## 必考面试题
+
+### 常见的HTTP状态码(HTTP Status Code)说明
+[常见的HTTP状态码(HTTP Status Code)说明](https://blog.csdn.net/Prototype___/article/details/81053395)
+
 ### 从输入URL到浏览器显示页面发生了什么
 这个过程可以大致分为两个部分：网络通信和页面渲染。
 #### 网络通信
