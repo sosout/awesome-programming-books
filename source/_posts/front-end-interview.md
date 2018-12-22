@@ -39,7 +39,11 @@ HTTP请求包括请求报头和请求主体两个部分
 
 ### http协议状态码，302和303的区别
 
-
+## Es6 面试题
+### JavaScript中var、let、const区别
+使用var声明的变量，其作用域为该语句所在的函数内，且存在变量提升现象；
+使用let声明的变量，其作用域为该语句所在的代码块内，不存在变量提升；
+使用const声明的是常量，在后面出现的代码中不能再修改该常量的值。
 
 ## JavaScript 面试题
 
@@ -91,6 +95,10 @@ co模块约定，yield命令后面只能是 Thunk 函数或 Promise 对象，而
 async函数的返回值是 Promise 对象，这比 Generator 函数的返回值是 Iterator 对象方便多了。你可以用then方法指定下一步的操作。
 
 进一步说，async函数完全可以看作多个异步操作，包装成的一个 Promise 对象，而await命令就是内部then命令的语法糖。
+
+### Thunk 函数
+
+[Thunk 函数的含义和用法](http://www.ruanyifeng.com/blog/2015/05/thunk.html)
 
 ### 数组去重
 ``` js
