@@ -844,6 +844,17 @@ foo();
 然后，在某一时刻，调用栈中的函数调用的数量超过了调用栈的实际大小，浏览器决定干掉它，抛出一个错误。
 
 ## React 面试题
+
+### React Fiber
+[React Fiber Architecture ](https://github.com/xxn520/react-fiber-architecture-cn)
+
+### react16的diff算法相比于react15有什么改动？
+
+[react16的diff算法相比于react15有什么改动？](https://www.zhihu.com/question/266800762/answer/392365854)
+
+### React 组件Component,元素Element和实例Instance的区别
+[React 组件Component,元素Element和实例Instance的区别](https://blog.csdn.net/andy_zhang2007/article/details/79396018)
+
 ### 调用 setState 之后发生了什么？
 在代码中调用setState函数之后，React 会将传入的参数对象与组件当前的状态进行合并，然后触发所谓的调和过程(Reconciliation)。经过调和过程，React 会以相对高效的方式根据新的状态构建 React 元素树并且着手重新渲染整个UI界面。在 React 得到元素树之后，React 会自动计算出新元素树与旧元素树的节点差异，然后根据差异对界面进行最小化更新。在diff算法中，React 能够相对精确地知道哪些位置发生了改变以及应该如何改变，这就保证了按需更新，而并非全部更新。
 
