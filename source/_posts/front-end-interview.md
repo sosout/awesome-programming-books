@@ -7,6 +7,10 @@ categories:
   - front-end
 ---
 
+## 数据结构
+### 链表
+[javascript中的链表结构]()
+
 ## 必考面试题
 
 ### 常见的HTTP状态码(HTTP Status Code)说明
