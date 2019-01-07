@@ -20,6 +20,12 @@ categories:
 
 [文档地址](https://github.com/SaraVieira/fiddly)
 
+### Git
+#### ghooks
+git 钩子。
+
+[文档地址](https://github.com/ghooks-org/ghooks)
+
 ### Github
 #### all-contributors-cli
 根据所有贡献者规范帮助自动添加贡献者确认的工具。
