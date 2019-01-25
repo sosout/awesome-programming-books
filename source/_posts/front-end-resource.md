@@ -6,6 +6,10 @@ tags:
 categories:
   - front-end
 ---
+
+## 辅助
+[State of JS 近两年的数据](https://2018.stateofjs.com/front-end-frameworks/overview/)
+
 ## NPM 包
 
 ### npm-scripts
@@ -51,6 +55,10 @@ git 钩子。
 
 #### diff
 [react16的diff算法相比于react15有什么改动？](https://www.zhihu.com/question/266800762/answer/392365854)
+
+#### VDOM
+
+[网上都说操作真实 DOM 慢，但测试结果却比 React 更快，为什么？](https://www.zhihu.com/question/31809713/answer/53544875)
 
 ### UI 库
 #### 控制反转和依赖注入

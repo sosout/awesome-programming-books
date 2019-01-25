@@ -9,6 +9,11 @@ categories:
 
 ## 必考面试题
 
+### Vue 和 React 的区别？
+1. 历史地位：多年以后 React 肯定是高于 Vue 的，React 是开拓者，Vue 更像是追随者。
+2. 定位：React 从一开始的定位就是提出 UI 开发的新思路。Vue 从一开始的定位就是尽可能的降低前端开发的门槛，让更多的人能够更快地上手开发。
+3. 设计：React 的设计并不迎合用户，而是试图改变用户的设计。Vue 十分迎合用户。
+
 ### 常见的HTTP状态码(HTTP Status Code)说明
 [常见的HTTP状态码(HTTP Status Code)说明](https://blog.csdn.net/Prototype___/article/details/81053395)
 
