@@ -302,6 +302,16 @@ Fubar(1, 2)._foo // 1
 
 **new 命令的原理**
 使用new命令时，它后面的函数依次执行下面的步骤。
+``` js
+var a = new myFunction("Li","Cherry");
+
+new myFunction{
+    var obj = {};
+    obj.__proto__ = myFunction.prototype;
+    var result = myFunction.call(obj,"Li","Cherry");
+    return typeof result === 'obj'? result : obj;
+}
+```
 1. 创建一个空对象，作为将要返回的对象实例。
 2. 将这个空对象的隐式原型，指向构造函数的prototype属性。
 3. 将这个空对象赋值给函数内部的this关键字。
