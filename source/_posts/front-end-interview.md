@@ -12,7 +12,7 @@ categories:
 ### Vue 和 React 的区别？
 1. 适用范围：同样是基于组件的轻量级框架，同样专注于用户界面的视图层。同样可以用在简单的项目中，也同样可以使用全家桶扩展为复杂的应用程序。
 2. 性能：在超大量数据首屏渲染速度上，React 有一定优势，因为 Vue 的渲染机制启动时候要做的工作比较多。
-3. 开发风格：React 推荐的模板是渲染函数，数据采用状态管理的方式，而vue的模板是模板和渲染函数的双重选择，数据采用对象属性方式。
+3. 开发风格：React 推荐的模板是渲染函数，数据采用状态管理的方式，而vue的模板是模板和渲染函数的弹性选择，数据采用对象属性方式。
 4. 生态社区：在Facebook大公司的影响下，React更大些。
 5. 历史地位：多年以后 React 肯定是高于 Vue 的，React 是开拓者，Vue 更像是追随者。
 6. 定位：React 从一开始的定位就是提出 UI 开发的新思路。Vue 从一开始的定位就是尽可能的降低前端开发的门槛，让更多的人能够更快地上手开发。
@@ -1405,6 +1405,8 @@ firstName的改变是这个特殊“事件”被触发的条件，而firstName�
 ### 生命周期
 [Vue2.0 探索之路——生命周期和钩子函数的一些理解](https://segmentfault.com/a/1190000008010666?utm_source=tag-newest)
 
+### Vue 的渲染机制
+
 ## CSS 面试题
 
 ### opacity:0,visibility:hidden,display:none的区别
@@ -2729,6 +2731,8 @@ XHTMl文档必须拥有根元素
 
 ## Node 面试题
 ### npm install的实现原理
+
+[npm install的实现原理](https://www.zhihu.com/question/66629910/answer/273992383)
 输入 npm install 命令并敲下回车后，会经历如下几个阶段（以 npm 5.5.1 为例）：
 
 #### 执行工程自身 preinstall
@@ -2786,7 +2790,11 @@ node_modules
 首先我先说一下项目中在写法上我优化的点：
 1、**require.context：**创建自己的（模块）上下文，这个方法有 3 个参数：要搜索的文件夹目录，是否还应该搜索它的子目录，以及一个匹配文件的正则表达式。只要重复性的引入文件，我都回使用该方法，比较典型的就是vuex 自动注册store，根据webpack的require.context及store的registerModule方法来自动注册store的modules，多人协作开发不需要担心代码冲突，不需要每个store.js都要import引入。
 
-[React 进阶设计与控制权问题](https://segmentfault.com/a/1190000016374190)
+[require.context](http://www.sosout.com/2018/05/08/webpack-tutorial.html)
+
+[mpvue-quickstart](https://github.com/meitianyitan/mpvue-quickstart/blob/master/template/src/store/index.js)
+
+[深耕业务 ---- 探索复杂/超复杂前端业务的开发与设计](https://zhuanlan.zhihu.com/p/36014716)
 
 ### Http
 参考：
@@ -2794,4 +2802,21 @@ node_modules
 
 ### koa 中间件机制
 参考：
-[理解 Koa 的中间件机制](https://github.com/frontend9/fe9-library/issues/104)
+[Koa1：你知道koa中间件执行原理吗？](https://github.com/qianlongo/resume-native/issues/1)
+
+Q： 请教个问题，中间件内部如果有多个yield next，运行过程似乎依然只是出入一次，不会根据yield的数量而出入多次，是否出了第一个yield，其他的都不会响应？
+
+A： 不是不会响应，而是那个generator已经执行完了，在一个generator传入的next，其实就是下一个generator，当你第一次调用yield next，会执行下一个generator执行到这个generator.next()的返回值的done为true，也就是已经执行完毕的时候才会继续往下执行，如果你下面的代码中还有yield next，其实就是再次调用一下此前已经执行完的generator，调用返回的结果肯定还是done为true，因为此前已经执行完了。所以后面继续yield next是没有意义的。
+
+Q：大约能明白你的意思，就是说如果我多个中间件都使用了多个yield，但是其中每次都是返回了第一段的结果，也都是true，所以之后的yield就不会再去执行了，是这个意思吗？
+
+另外这个done我如何能给它false，并根据false来进行分支？
+
+A：会执行，只是执行的返回值中的done就是true，而co函数会判断返回值，如果返回值的done是true，说明这个函数已经执行完了，就没必要再管他了。
+done是没法赋值的，能控制的只有value，done表示当前generator的执行状态，generator的执行只能从上往下，是没法逆行的，除非你重新实例化一个generator函数对象。
+
+[Koa2：理解 Koa 的中间件机制](https://github.com/frontend9/fe9-library/issues/104)
+
+### 部署
+
+[科普文：为什么不能在服务器上 npm install ？](https://zhuanlan.zhihu.com/p/39209596)
