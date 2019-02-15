@@ -105,6 +105,7 @@ HTTP请求包括请求报头和请求主体两个部分
 ## JavaScript 面试题
 
 ### 构造函数
+[构造函数](https://wangdoc.com/javascript/oop/new.html#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0)
 #### 缺点
 同一个构造函数的多个实例之间，无法共享属性，从而造成对系统资源的浪费。
 
